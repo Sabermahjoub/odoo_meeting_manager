@@ -26,11 +26,16 @@ Meeting Management
 
 ✅ Assign a responsible employee and participants
 
+✅ Assign or book an in-person meeting in an available room for a specific slot
+
 ✅ Automatically filter meetings by employee department
 
 Room Management
 
 ✅ Assign rooms to in-person meetings
+
 ✅ Prevent double booking of rooms
+
 ✅ Track room availability in real-time
+
 ✅ Filter available rooms based on capacity
