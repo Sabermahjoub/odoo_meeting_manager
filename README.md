@@ -19,9 +19,13 @@ This french Odoo 17 module allows businesses and companies to plan, organize, an
 Meeting Management
 
 ✅ Create, update, and delete meetings
+
 ✅ Manage meeting states: Draft, Active, Cancelled, Done
+
 ✅ Associate meetings with departments
+
 ✅ Assign a responsible employee and participants
+
 ✅ Automatically filter meetings by employee department
 
 Room Management
