@@ -50,3 +50,11 @@ This French Odoo 17 module allows businesses and companies to plan, organize, an
 3. When a meeting is confirmed, a calendar event is automatically created
 4. Meeting states follow a logical progression: Draft → Active → Done (or Cancelled)
 5. Room availability is checked in real-time to prevent scheduling conflicts
+
+##  How to run ? 
+
+For this module, I used the default DB user openpg: 
+
+```bash
+"C:\Program Files\Odoo 17.0.20250213\python\python.exe" odoo-bin -r openpg -w openpgpwd --addons-path="C:\Program Files\Odoo 17.0.20250213\server\custom,C:\Program Files\Odoo 17.0.20250213\server\odoo\addons" -u my_module -d odoo_db
+
