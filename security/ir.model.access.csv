@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_my_module_reunion_user,Access Reunion User,model_my_module_reunion,my_module.reunion_group_user,1,0,0,0
+access_my_module_reunion_admin,Access Reunion Admin,model_my_module_reunion,my_module.reunion_group_manager,1,1,1,1
+access_my_module_salle_user,Access Salle User,model_my_module_salle,my_module.salle_group_user,1,0,0,0
+access_my_module_salle_admin,Access Salle Admin,model_my_module_salle,my_module.salle_group_manager,1,1,1,1

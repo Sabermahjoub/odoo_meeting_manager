@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security Category -->
+    <record id="module_salle_security" model="ir.module.category">
+        <field name="name">Module salle</field>
+        <field name="description">Droits du module salle</field>
+    </record>
+
+    <!-- User Group (Read-Only Access) -->
+    <record id="salle_group_user" model="res.groups">
+        <field name="name">Utilisateur</field>
+        <field name="category_id" ref="module_salle_security"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Admin Group (Full Access) -->
+    <record id="salle_group_manager" model="res.groups">
+        <field name="name">Administrateur</field>
+        <field name="category_id" ref="module_salle_security"/>
+        <field name="implied_ids" eval="[(4, ref('salle_group_user'))]"/>
+    </record>
+</odoo>

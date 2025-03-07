@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vue liste des salles -->
+    <record id="view_salle_tree" model="ir.ui.view">
+        <field name="name">my_module.salle.tree</field>
+        <field name="model">my_module.salle</field>
+        <field name="arch" type="xml">
+            <tree string="Salles de Réunion" 
+                  decoration-success="active==True" 
+                  decoration-danger="active==False"
+                  multi_edit="1">
+                <field name="name" 
+                       string="Nom de la Salle" 
+                       decoration-bf="1"/>
+                <field name="etage" 
+                       string="Étage" 
+                       optional="show"/>
+                <field name="capacite" 
+                       string="Capacité" 
+                       optional="show"/>
+                <field name="active" 
+                       string="Active"
+                       invisible="1"/>
+                <button name="toggle_active" 
+                        type="object" 
+                        icon="fa-power-off" 
+                        class="btn-danger"
+                        invisible = "active == False"
+                        groups="my_module.salle_group_manager"
+                        help="Désactiver la salle"/>
+                <button name="toggle_active" 
+                        type="object" 
+                        icon="fa-power-off" 
+                        class="btn-success"
+                        invisible = "active == True"
+                        groups="my_module.salle_group_manager"
+                        help="Activer la salle"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire des salles -->
+    <record id="view_salle_form" model="ir.ui.view">
+        <field name="name">my_module.salle.form</field>
+        <field name="model">my_module.salle</field>
+        <field name="arch" type="xml">
+            <form string="Salle de Réunion">
+                <header>
+                    <button name="action_view_reunions" 
+                            type="object" 
+                            class="oe_highlight" 
+                            string="Voir les Réunions" 
+                            icon="fa-calendar"/>
+                    <button name="generate_qr_code" 
+                            type="object" 
+                            string="Générer QR Code" 
+                            icon="fa-qrcode"/>
+                    <field name="active" 
+                           widget="boolean_button" 
+                           options="{'terminology': 'active'}" 
+                           class="oe_right"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" 
+                                type="object" 
+                                class="oe_stat_button" 
+                                icon="fa-power-off">
+                            <field name="active" 
+                                   widget="boolean_button" 
+                                   options="{'terminology': 'active'}"/>
+                        </button>
+                        <button name="action_view_reunions" 
+                                type="object" 
+                                class="oe_stat_button" 
+                                icon="fa-calendar">
+                            <field name="reunion_count" 
+                                   string="Réunions" 
+                                   widget="statinfo"/>
+                        </button>
+                    </div>
+                    <!--field name="image_1920" 
+                           widget="image" 
+                           class="oe_avatar" 
+                           options='{"preview_image": "image_128"}'/-->
+                    <div class="oe_title">
+                        <label for="name" string="Nom de la Salle"/>
+                        <h1>
+                            <field name="name" 
+                                   placeholder="Ex: Salle de Conférence A" 
+                                   required="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Détails de la Salle">
+                            <field name="etage" 
+                                   widget="number" 
+                                   help="Numéro de l'étage"/>
+                            <field name="capacite" 
+                                   widget="number" 
+                                   help="Nombre maximum de personnes"/>
+                        </group>
+                    </group>
+                    <!--notebook>
+                        <page string="Description" name="description_page">
+                            <field name="description" 
+                                   placeholder="Informations complémentaires sur la salle..." 
+                                   widget="html" 
+                                   options="{'style-inline': true}"/>
+                        </page>
+                        <page string="Réunions Programmées" name="reunions_page">
+                            <field name="reunion_ids" 
+                                   readonly="1" 
+                                   string="Réunions">
+                                <tree decoration-success="state == 'confirm'" 
+                                      decoration-danger="state == 'cancel'"
+                                      decoration-muted="state == 'draft'">
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </!notebook-->
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_salle_search" model="ir.ui.view">
+        <field name="name">my_module.salle.search</field>
+        <field name="model">my_module.salle</field>
+        <field name="arch" type="xml">
+            <search string="Recherche de Salles">
+                <!-- Basic search fields -->
+                <field name="name" 
+                    filter_domain="['|', ('name', 'ilike', self), ('etage', 'ilike', self)]"/>
+                <field name="etage"/>
+                
+                <!-- Filters for active and inactive records -->
+                <filter string="Salles Actives" 
+                        name="active_salles" 
+                        domain="[('active', '=', True)]"/>
+                <filter string="Salles Inactives" 
+                        name="inactive_salles" 
+                        domain="[('active', '=', False)]"/>
+                
+                <!-- Optional filters for capacity -->
+                <filter string="Grande Capacité" 
+                        name="large_capacity" 
+                        domain="[('capacite', '>=', 50)]"/>
+                
+                <!-- Grouping options -->
+                <group expand="0" string="Grouper par">
+                    <filter string="Étage" 
+                            name="group_by_etage" 
+                            context="{'group_by': 'etage'}"/>
+                    <filter string="Capacité" 
+                            name="group_by_capacite" 
+                            context="{'group_by': 'capacite'}"/>
+                    <filter string="Statut" 
+                            name="group_by_active" 
+                            context="{'group_by': 'active'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action de fenêtre pour les salles -->
+    <record id="action_salle" model="ir.actions.act_window">
+        <field name="name">Salles de Réunion</field>
+        <field name="res_model">my_module.salle</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="search_view_id" ref="view_salle_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créez vos salles de réunion
+            </p>
+            <p>
+                Configurez ici les différentes salles disponibles dans votre entreprise.
+                Précisez leur capacité, leurs équipements et leurs particularités.
+            </p>
+        </field>
+    </record>
+
+    <!-- Vue Kanban pour les salles -->
+    <record id="view_salle_kanban" model="ir.ui.view">
+        <field name="name">my_module.salle.kanban</field>
+        <field name="model">my_module.salle</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="etage">
+                <field name="name"/>
+                <field name="capacite"/>
+                <field name="etage"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click #{record.active.raw_value ? '' : 'text-muted'}">
+                            <div class="o_kanban_image">
+                                <img t-att-src="kanban_image('my_module.salle', 'image_128', record.id.raw_value)"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong><field name="name"/></strong>
+                                <ul>
+                                    <li>Étage: <field name="etage"/></li>
+                                    <li>Capacité: <field name="capacite"/> personnes</li>
+                                </ul>
+                                <div class="o_kanban_footer">
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="reunion_count" widget="statinfo"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Menu pour accéder aux salles -->
+    <menuitem 
+        id="menu_salle_list" 
+        name="Salles" 
+        parent="menu_reunion_root"
+        action="action_salle"
+        sequence="10"/>
+
+</odoo>

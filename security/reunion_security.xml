@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security Category -->
+    <record id="module_reunion_security" model="ir.module.category">
+        <field name="name">Module réunions</field>
+        <field name="description">Droits du module réunion</field>
+    </record>
+
+    <!-- User Group (Read-Only Access) -->
+    <record id="reunion_group_user" model="res.groups">
+        <field name="name">Utilisateur</field>
+        <field name="category_id" ref="module_reunion_security"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="reunion_rule_user" model="ir.rule">
+        <field name="name">User: See only "done" reunions they are involved in</field>
+        <field name="model_id" ref="model_my_module_reunion"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="domain_force">
+            [('state', '=', 'done'), '|', ('responsable', '=', user.partner_id.id), ('participants', 'in', user.employee_ids.ids)]
+        </field>
+    </record>
+
+    <!-- Admin Group (Full Access) -->
+    <record id="reunion_group_manager" model="res.groups">
+        <field name="name">Administrateur</field>
+        <field name="category_id" ref="module_reunion_security"/>
+        <field name="implied_ids" eval="[(4, ref('reunion_group_user'))]"/>
+    </record>
+
+    <!-- Admin Rule - allows managers to see all reunions -->
+    <record id="reunion_rule_manager" model="ir.rule">
+        <field name="name">Manager: See all reunions</field>
+        <field name="model_id" ref="model_my_module_reunion"/>
+        <field name="groups" eval="[(4, ref('reunion_group_manager'))]"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+    </record>
+</odoo>
